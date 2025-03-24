@@ -16,7 +16,7 @@
         }
 
         .background {
-            background-image: url('Images/Start maps logo.png');
+            background-image: url('Images/Start maps logo.png?v=2'); /* Cache-busting */
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
@@ -55,7 +55,6 @@
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
-
         gtag('config', 'G-R3HQPCLHFH');
     </script>
 </head>
@@ -84,6 +83,12 @@
             event.preventDefault(); // Prevent default link behavior
             const url = event.target.href;
             window.open(url, '_system'); // Open in system default browser
+        }
+
+        // Force cache refresh when visiting the site if a new version is available
+        if (localStorage.getItem('cacheVersion') !== '2') {  
+            localStorage.setItem('cacheVersion', '2');  
+            location.reload(true);  
         }
     </script>
 </body>
