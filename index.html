@@ -5,84 +5,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StartMaps</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        margin: 0;
-        padding: 0;
-        min-height: 100vh; /* Changed from height to min-height for flexibility */
-        display: flex; /* Enable flexbox */
-        flex-direction: column; /* Stack children vertically */
-    }
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh; /* Ensures body can grow with content */
+        }
 
-    .background {
-        background-image: url('Images/Start maps logo.png?v=2'); /* Cache-busting */
-        background-size: contain;
-        background-position: center;
-        background-repeat: no-repeat;
-        opacity: 0.5; /* 50% opacity */
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1; /* Place behind content */
-    }
+        .background {
+            background-image: url('Images/Start maps logo.png?v=2'); /* Cache-busting */
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.5; /* 50% opacity */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Place behind content */
+        }
 
-    /* Wrap your main content in a container if not already done */
-    .content {
-        flex: 1 0 auto; /* Grows to fill space, doesn’t shrink */
-    }
+        .content {
+            padding: 20px; /* Optional: Adds some breathing room to content */
+        }
 
-    footer {
-        background-color: #f8f8f8; /* Light gray background for contrast */
-        padding: 20px; /* Space inside the footer */
-        text-align: center; /* Center-align content */
-        border-top: 1px solid #e0e0e0; /* Subtle top border */
-        flex-shrink: 0; /* Prevents footer from shrinking */
-        font-family: Arial, sans-serif; /* Match your site’s font */
-    }
+        .contact-overlay {
+            position: fixed; /* Sticks to the bottom of the viewport */
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(248, 248, 248, 0.9); /* Light gray, slightly transparent */
+            padding: 10px; /* Compact padding for overlay */
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+            z-index: 10; /* Ensures it’s above other content */
+        }
 
-    footer h3 {
-        font-size: 16px; /* Slightly smaller heading */
-        margin-bottom: 10px; /* Space below the heading */
-        color: #333; /* Darker text for readability */
-    }
+        .contact-overlay h3 {
+            font-size: 14px; /* Smaller for overlay */
+            margin: 0 0 5px 0; /* Tight spacing */
+            color: #333;
+        }
 
-    footer p {
-        margin: 0; /* Remove default paragraph margins */
-        font-size: 14px; /* Readable but not overpowering */
-    }
+        .contact-overlay p {
+            margin: 0;
+            font-size: 12px; /* Readable but compact */
+        }
 
-    footer a {
-        color: #1da1f2; /* Twitter’s brand blue */
-        text-decoration: none; /* No underline by default */
-    }
+        .contact-overlay a {
+            color: #1da1f2; /* Twitter’s brand blue */
+            text-decoration: none;
+        }
 
-    footer a:hover {
-        text-decoration: underline; /* Underline on hover for interactivity */
-    }
+        .contact-overlay a:hover {
+            text-decoration: underline;
+        }
 
-    h1 {
-        color: #333;
-    }
+        h1 {
+            color: #333;
+        }
 
-    a {
-        text-decoration: none;
-        color: #333;
-        font-weight: bold;
-    }
+        a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
 
-    a:hover {
-        text-decoration: underline;
-    }
-</style>
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9289428933728345"
         crossorigin="anonymous"></script>
 
-    <meta name="google-adsense-account" content="ca-pub-9289428933728345">
+    <meta name="google-adsense-account" content="ca-pub-928942 Tid8933728345">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-R3HQPCLHFH"></script>
@@ -97,28 +97,30 @@
 <body>
     <div class="background"></div> <!-- Background div for semi-transparent image -->
 
-    <h1>Welcome to StartMaps</h1>
-    <p>The easiest way to see what tournaments are happening around the Globe</p>
+    <div class="content">
+        <h1>Welcome to StartMaps</h1>
+        <p>The easiest way to see what tournaments are happening around the Globe</p>
 
-    <div>
-        <p><a href="/FinalStartMaps/">StartMaps</a></p>
-        <p><a href="/FinalStartMapsOnline/">Tournament Spreadsheet</a></p>
+        <div>
+            <p><a href="/FinalStartMaps/">StartMaps</a></p>
+            <p><a href="/FinalStartMapsOnline/">Tournament Spreadsheet</a></p>
+        </div>
+
+        <h1>Community Projects</h1>
+        <div>
+            <p><a href="https://tekkenratings.tristanmelton.com/" onclick="openInBrowser(event)">Tekken 8 Tournament Ratings by Tristan Melton</a></p>
+            <p><a href="https://wank.wavu.wiki/" onclick="openInBrowser(event)">Wavu Wank by 6weetbix</a></p>
+            <p><a href="https://kekken.com/" onclick="openInBrowser(event)">Kekken by (Please let me know the Author)</a></p>
+            <p><a href="https://rbnorway.org/t8-frame-data/" onclick="openInBrowser(event)">Tekken 8 Frame Data by RBNorway</a></p>
+        </div>
     </div>
 
-    <h1>Community Projects</h1>
-    <div>
-        <p><a href="https://tekkenratings.tristanmelton.com/" onclick="openInBrowser(event)">Tekken 8 Tournament Ratings by Tristan Melton</a></p>
-        <p><a href="https://wank.wavu.wiki/" onclick="openInBrowser(event)">Wavu Wank by 6weetbix</a></p>
-        <p><a href="https://kekken.com/" onclick="openInBrowser(event)">Kekken by (Please let me know the Author)</a></p>
-        <p><a href="https://rbnorway.org/t8-frame-data/" onclick="openInBrowser(event)"> Tekken 8 Frame Data by RBNorway</a></p>
+    <div class="contact-overlay">
+        <h3>Contact me on Twitter if you have any issues or suggestions</h3>
+        <div>
+            <p><a href="https://x.com/KingShamus1" onclick="openInBrowser(event)">KingShamus1</a></p>
+        </div>
     </div>
-
-    <footer>
-    <h3>Contact me on Twitter if you have any issues or suggestions</h3>
-    <div>
-        <p><a href="https://x.com/KingShamus1" onclick="openInBrowser(event)">KingShamus1</a></p>
-    </div>
-    </footer>
 
     <script>
         function openInBrowser(event) {
