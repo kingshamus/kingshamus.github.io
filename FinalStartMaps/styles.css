@@ -165,13 +165,6 @@ html, body {
         padding: 10px; /* Larger padding on buttons for better touch interaction */
     }
 
-    #selected-games-display {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-}
-
 #filter-button {
     position: fixed;
     top: 10px;
