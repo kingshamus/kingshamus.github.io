@@ -15,17 +15,10 @@ html, body {
     z-index: 1000;
 }
 
-.search-layout {
-    display: flex;
-    align-items: center; /* Center items vertically */
-    justify-content: space-between; /* Distribute space evenly */
-    width: 100%;
-}
-
 /* Search Bar */
 #search-bar {
     display: flex;
-    align-items: anchor-center !important; /* Align items vertically */
+    align-items: center;
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -34,7 +27,55 @@ html, body {
     max-width: 600px;
     min-width: 300px;
     box-sizing: border-box;
-    justify-content: space-between; /* Distribute space between elements */
+}
+
+/* Button Container */
+.button-container {
+    display: flex;
+    margin-left: auto; /* Push buttons to the right */
+    gap: 10px; /* Add spacing between buttons */
+}
+
+/* Adjustments for mobile devices */
+@media (max-width: 768px) {
+    #search-bar {
+        width: 95%; /* Further increase width for very small screens */
+        flex-direction: column;
+    }
+
+    #game-search {
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 10px; /* Larger padding for easier touch */
+        align-items: right;
+    }
+
+    #search-button, #clear-button {
+        width: 100%;
+        margin: 5px 0;
+        padding: 10px; /* Larger padding on buttons for better touch interaction */
+        align-items: right;
+    }
+
+    #selected-games-display {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    #filter-button {
+        position: fixed;
+        top: auto; /* Adjust position to be more visible on smaller screens */
+        bottom: 20px;
+        right: 20px;
+    }
+
+    #filter-options {
+        max-width: 90%; /* Wider on mobile for better visibility */
+        top: auto;
+        bottom: 70px; /* Position above the filter button */
+        right: 20px;
+    }
 }
 
 #game-search {
@@ -43,20 +84,6 @@ html, body {
     border: none;
     border-radius: 5px;
     font-size: 16px;
-    margin-right: 10px; /* Adds space between the input and text */
-}
-
-#selected-games-display {
-    margin: 0 10px; /* Adds margin on both sides */
-    text-align: center;
-    display: inline-block;
-}
-
-.button-container {
-    flex: 0 0 auto;
-    display: flex;
-    gap: 10px; /* Space between buttons */
-    align-items: center; /* Centers buttons vertically */
 }
 
 #search-button {
@@ -66,6 +93,7 @@ html, body {
     padding: 8px 12px;
     color: white;
     cursor: pointer;
+    margin-left: 10px;
     align-items: right;
 }
 
@@ -78,6 +106,7 @@ html, body {
     color: white;
     font-size: 14px;
     cursor: pointer;
+    align-items: right;
 }
 
 #clear-button:hover {
@@ -145,25 +174,6 @@ html, body {
 .autocomplete-item input[type="checkbox"] {
     margin-right: 10px;
 }
-
-/* Mobile Adjustments */
-@media (max-width: 768px) {
-    #search-bar {
-        width: 95%; /* Further increase width for very small screens */
-        flex-direction: column;
-    }
-
-    #game-search {
-        width: 100%;
-        margin-bottom: 10px;
-        padding: 10px; /* Larger padding for easier touch */
-    }
-
-    #search-button, #clear-button {
-        width: 100%;
-        margin: 5px 0;
-        padding: 10px; /* Larger padding on buttons for better touch interaction */
-    }
 
 #filter-button {
     position: fixed;
