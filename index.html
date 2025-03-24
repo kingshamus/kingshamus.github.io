@@ -5,77 +5,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StartMaps</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            position: relative;
-        }
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh; /* Changed from height to min-height for flexibility */
+        display: flex; /* Enable flexbox */
+        flex-direction: column; /* Stack children vertically */
+    }
 
-        .background {
-            background-image: url('Images/Start maps logo.png?v=2'); /* Cache-busting */
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0.5; /* 50% opacity */
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1; /* Place behind content */
-        }
+    .background {
+        background-image: url('Images/Start maps logo.png?v=2'); /* Cache-busting */
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0.5; /* 50% opacity */
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1; /* Place behind content */
+    }
 
-footer {
-    background-color: #f8f8f8; /* Light gray background for contrast */
-    padding: 20px; /* Space inside the footer */
-    text-align: center; /* Center-align content */
-    border-top: 1px solid #e0e0e0; /* Subtle top border */
-    margin-top: 40px; /* Space above footer to separate from main content */
-    font-family: Arial, sans-serif; /* Match your site’s font, if different */
-}
+    /* Wrap your main content in a container if not already done */
+    .content {
+        flex: 1 0 auto; /* Grows to fill space, doesn’t shrink */
+    }
 
-footer h3 {
-    font-size: 16px; /* Slightly smaller heading */
-    margin-bottom: 10px; /* Space below the heading */
-    color: #333; /* Darker text for readability */
-}
+    footer {
+        background-color: #f8f8f8; /* Light gray background for contrast */
+        padding: 20px; /* Space inside the footer */
+        text-align: center; /* Center-align content */
+        border-top: 1px solid #e0e0e0; /* Subtle top border */
+        flex-shrink: 0; /* Prevents footer from shrinking */
+        font-family: Arial, sans-serif; /* Match your site’s font */
+    }
 
-footer p {
-    margin: 0; /* Remove default paragraph margins */
-    font-size: 14px; /* Readable but not overpowering */
-}
+    footer h3 {
+        font-size: 16px; /* Slightly smaller heading */
+        margin-bottom: 10px; /* Space below the heading */
+        color: #333; /* Darker text for readability */
+    }
 
-footer a {
-    color: #1da1f2; /* Twitter’s brand blue */
-    text-decoration: none; /* No underline by default */
-}
+    footer p {
+        margin: 0; /* Remove default paragraph margins */
+        font-size: 14px; /* Readable but not overpowering */
+    }
 
-footer a:hover {
-    text-decoration: underline; /* Underline on hover for interactivity */
-}
-        
-        footer {
-    margin-top: auto; /* Pushes footer to the bottom */
-}
+    footer a {
+        color: #1da1f2; /* Twitter’s brand blue */
+        text-decoration: none; /* No underline by default */
+    }
 
-        h1 {
-            color: #333;
-        }
+    footer a:hover {
+        text-decoration: underline; /* Underline on hover for interactivity */
+    }
 
-        a {
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-        }
+    h1 {
+        color: #333;
+    }
 
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+</style>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9289428933728345"
         crossorigin="anonymous"></script>
