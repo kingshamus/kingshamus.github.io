@@ -29,6 +29,39 @@
             z-index: -1; /* Place behind content */
         }
 
+footer {
+    background-color: #f8f8f8; /* Light gray background for contrast */
+    padding: 20px; /* Space inside the footer */
+    text-align: center; /* Center-align content */
+    border-top: 1px solid #e0e0e0; /* Subtle top border */
+    margin-top: 40px; /* Space above footer to separate from main content */
+    font-family: Arial, sans-serif; /* Match your site’s font, if different */
+}
+
+footer h3 {
+    font-size: 16px; /* Slightly smaller heading */
+    margin-bottom: 10px; /* Space below the heading */
+    color: #333; /* Darker text for readability */
+}
+
+footer p {
+    margin: 0; /* Remove default paragraph margins */
+    font-size: 14px; /* Readable but not overpowering */
+}
+
+footer a {
+    color: #1da1f2; /* Twitter’s brand blue */
+    text-decoration: none; /* No underline by default */
+}
+
+footer a:hover {
+    text-decoration: underline; /* Underline on hover for interactivity */
+}
+        
+        footer {
+    margin-top: auto; /* Pushes footer to the bottom */
+}
+
         h1 {
             color: #333;
         }
@@ -63,11 +96,11 @@
     <div class="background"></div> <!-- Background div for semi-transparent image -->
 
     <h1>Welcome to StartMaps</h1>
-    <p>Select a map and see what tournaments are happening near you:</p>
+    <p>The easiest way to see what tournaments are happening around the Globe</p>
 
     <div>
         <p><a href="/FinalStartMaps/">StartMaps</a></p>
-        <p><a href="/FinalStartMapsOnline/">StartMaps Online</a></p>
+        <p><a href="/FinalStartMapsOnline/">Tournament Spreadsheet</a></p>
     </div>
 
     <h1>Community Projects</h1>
@@ -77,11 +110,13 @@
         <p><a href="https://kekken.com/" onclick="openInBrowser(event)">Kekken by (Please let me know the Author)</a></p>
         <p><a href="https://rbnorway.org/t8-frame-data/" onclick="openInBrowser(event)"> Tekken 8 Frame Data by RBNorway</a></p>
     </div>
-    
+
+    <footer>
     <h3>Contact me on Twitter if you have any issues or suggestions</h3>
     <div>
         <p><a href="https://x.com/KingShamus1" onclick="openInBrowser(event)">KingShamus1</a></p>
     </div>
+    </footer>
 
     <script>
         function openInBrowser(event) {
