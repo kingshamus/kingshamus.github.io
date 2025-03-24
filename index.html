@@ -11,11 +11,22 @@
             text-align: center;
             margin: 0;
             padding: 0;
-            background-image: url('Images/Start\ maps\ logo.png');
+            height: 100vh;
+            position: relative;
+        }
+
+        .background {
+            background-image: url('Images/Start maps logo.png');
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
-            height: 100vh;
+            opacity: 0.5; /* 50% opacity */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Place behind content */
         }
 
         h1 {
@@ -34,31 +45,47 @@
     </style>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9289428933728345"
-     crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
 
     <meta name="google-adsense-account" content="ca-pub-9289428933728345">
-    
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R3HQPCLHFH"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-R3HQPCLHFH');
+    </script>
 </head>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-R3HQPCLHFH"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-R3HQPCLHFH');
-</script>
-    
 <body>
+    <div class="background"></div> <!-- Background div for semi-transparent image -->
+
     <h1>Welcome to StartMaps</h1>
     <p>Select a map and see what tournaments are happening near you:</p>
 
     <div>
         <p><a href="https://kingshamus.github.io/FinalStartMaps/" target="_blank">StartMaps</a></p>
         <p><a href="https://kingshamus.github.io/FinalStartMapsOnline/" target="_blank">StartMaps Online</a></p>
-        <p><a href="https://play.google.com/store/apps/details?id=com.kingshamus.startmaps&hl=en_GB&gl=US" target="_blank">Download the Android APP!!!</a></p>
     </div>
+
+    <h1>Community Projects</h1>
+    <div>
+        <p><a href="https://tekkenratings.tristanmelton.com/" onclick="openInBrowser(event)">Tekken 8 Tournament Ratings by Tristan Melton</a></p>
+        <p><a href="https://wank.wavu.wiki/" onclick="openInBrowser(event)">Wavu Wank by 6weetbix</a></p>
+        <p><a href="https://kekken.com/" onclick="openInBrowser(event)">Kekken by (Please let me know the Author)</a></p>
+        <p><a href="https://rbnorway.org/t8-frame-data/" onclick="openInBrowser(event)"> Tekken 8 Frame Data by RBNorway</a></p>
+    </div>
+
+    <script>
+        function openInBrowser(event) {
+            event.preventDefault(); // Prevent default link behavior
+            const url = event.target.href;
+            window.open(url, '_system'); // Open in system default browser
+        }
+    </script>
 </body>
 
 </html>
