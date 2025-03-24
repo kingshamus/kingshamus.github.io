@@ -19,7 +19,7 @@
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
-            opacity: 0.3; /* 30% opacity */
+            opacity: 0.3; /* 30% opacity as per your change */
             position: absolute;
             top: 0;
             left: 0;
@@ -29,11 +29,17 @@
         }
 
         .content {
-            padding: 20px; /* Optional: Adds some breathing room to content */
+            padding: 20px; /* Breathing room for content */
+            background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white to fade image behind text */
+            position: relative; /* Ensures it sits above the background */
+            z-index: 1; /* Above the background image */
+            margin: 0 auto; /* Center it horizontally */
+            max-width: 800px; /* Limits width for readability */
         }
 
-        .content h1, .content p {
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); /* Shadow for main content text */
+        .content h1 {
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); /* Shadow only on h1 */
+            color: #333;
         }
 
         .contact-overlay {
@@ -48,14 +54,11 @@
             z-index: 10; /* Ensures it’s above other content */
         }
 
-        .contact-overlay h3, .contact-overlay p {
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Softer shadow for overlay */
-        }
-
         .contact-overlay h3 {
             font-size: 14px; /* Smaller for overlay */
             margin: 0 0 5px 0; /* Tight spacing */
             color: #333;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Shadow only on h3 */
         }
 
         .contact-overlay p {
