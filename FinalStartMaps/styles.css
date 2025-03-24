@@ -15,6 +15,13 @@ html, body {
     z-index: 1000;
 }
 
+.search-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
 /* Search Bar */
 #search-bar {
     display: flex;
@@ -29,11 +36,10 @@ html, body {
     box-sizing: border-box;
 }
 
-/* Button Container */
 .button-container {
+    flex: 0 0 auto;
     display: flex;
-    margin-left: auto; /* Push buttons to the right */
-    gap: 10px; /* Add spacing between buttons */
+    gap: 10px; /* Space between buttons */
 }
 
 /* Adjustments for mobile devices */
