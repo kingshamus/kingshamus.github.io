@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StartMaps</title>
+    <!-- Include Leaflet library -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Include leaflet-control-geocoder library -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css">
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <!-- Include Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Include Awesomplete library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.2/awesomplete.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.2/awesomplete.min.js"></script>
+    <!-- Include your custom styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="search-container">
+        <div id="search-bar">
+            <input type="text" id="game-search" placeholder="Search for games..." data-list="">
+            <input type="hidden" id="selected-games">
+            <div id="selected-games-display">0 Games Selected</div>
+            <div class="button-container">
+            <button id="clear-button" onclick="window.location.reload()">Clear</button>
+            <button id="search-button" onclick="search()">Search</button>
+            </div>
+            <div id="map-loading-spinner" class="spinner"></div>
+        </div>
+    </div>
+
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
+
+    <button id="filter-button" onclick="toggleFilterOptions()">Filter</button>
+
+    <div id="filter-options">
+        <div>
+            <button id="select-all-button" onclick="selectAllFilters()">Select All</button>
+            <button id="deselect-all-button" onclick="deselectAllFilters()">Deselect All</button>
+        </div>
+        
+        <div class="filter-option">
+            <input type="checkbox" id="filter-gold" checked> 256+ attendees (Gold)
+        </div>
+        <div class="filter-option">
+            <input type="checkbox" id="filter-grey" checked> 128+ attendees (Grey)
+        </div>
+        <div class="filter-option">
+            <input type="checkbox" id="filter-black" checked> 96+ attendees (Black)
+        </div>
+        <div class="filter-option">
+            <input type="checkbox" id="filter-violet" checked> 64+ attendees (Violet)
+        </div>
+        <div class="filter-option">
+            <input type="checkbox" id="filter-red" checked> 48+ attendees (Red)
+        </div>
+        <div class="filter-option">
+            <input type="checkbox" id="filter-orange" checked> 32+ attendees (Orange)
+        </div>
+        <div class="filter-option">
+            <input type="checkbox" id="filter-yellow" checked> 24+ attendees (Yellow)
+        </div>
+        <div class="filter-option">
+            <input type="checkbox" id="filter-green" checked> 16+ attendees (Green)
+        </div>
+        <div class="filter-option">
+            <input type="checkbox" id="filter-white" checked> Under 16 attendees (White)
+        </div>
+        <div class="filter-option">
+            <input type="checkbox" id="filter-blue" checked> Over 2 weeks away (Blue)
+        </div>
+    </div>
+
+    <!-- Include your app.js file -->
+    <script src="app.js"></script>
+
+</body>
+</html>
