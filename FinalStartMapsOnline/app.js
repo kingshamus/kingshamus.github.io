@@ -2,7 +2,7 @@ const axios = require('axios');
 const moment = require('moment');
 const { createTable } = require('tabulator');
 
-const token = "c2a8a8f10786247a50b5be6cb87bc012";
+const token = "8c3d6ebd26053b772c8fdbd2bd73d78e";
 const headers = { "Authorization": "Bearer " + token };
 
 const query = `query TournamentsByVideogame($perPage: Int!, $videogameId: ID!) {
