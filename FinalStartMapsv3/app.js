@@ -82,7 +82,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Define headers and query for fetching data
-var token = "c2a8a8f10786247a50b5be6cb87bc012";
+var token = "8c3d6ebd26053b772c8fdbd2bd73d78e";
 var headers = { "Authorization": "Bearer " + token };
 
 async function fetchData(videogameId) {
