@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Cache-control meta tags to prevent browser caching -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>StartMaps Online</title>
+  <!-- Include Tabulator CSS with cache-busting query -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/5.1.0/css/tabulator.min.css?ts=1728051270" rel="stylesheet">
+  <!-- Include Font Awesome for the spinner with cache-busting query -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css?ts=1728051270" rel="stylesheet">
+  <!-- Include Awesomplete library with cache-busting query -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.2/awesomplete.min.js?ts=1728051270"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.2/awesomplete.css?ts=1728051270" />
+  <!-- Include your styles.css file with cache-busting query -->
+  <link rel="stylesheet" href="styles.css?ts=1728051270">
+  <style>
+    /* Add custom styles */
+    #search-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .search-input {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 300px;
+      margin-right: 10px;
+    }
+
+    .search-button {
+      padding: 10px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #tableContainer {
+      position: absolute;
+      top: calc(10% + 20px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+    }
+
+    #tableElement {
+      max-width: 100%;
+    }
+
+    .spinner {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+  </style>
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9289428933728345&ts=1728051270"
+    crossorigin="anonymous"></script>
+  <meta name="google-adsense-account" content="ca-pub-9289428933728345">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-R3HQPCLHFH&ts=1728051270"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-R3HQPCLHFH');
+  </script>
+</head>
+<body>
+  <div id="search-container">
+    <div id="search-bar">
+      <!-- Search Input with Autocomplete -->
+      <input type="text" id="gameName" class="search-input" placeholder="Search for a game..." list="gameList">
+      <datalist id="gameList"></datalist>
+      <!-- Search Button with Magnifying Glass Icon -->
+      <button id="search-button" class="search-button" onclick="generateSpreadsheet()"><i class="fas fa-search"></i></button>
+    </div>
+  </div>
+
+  <!-- Loading Spinner for Table -->
+  <div id="loadingSpinner" class="spinner"></div>
+
+  <!-- Table Container -->
+  <div id="tableContainer" style="display: none;">
+    <div id="tableElement" data-layout="fitDataFill"></div>
+  </div>
+
+  <!-- Include Tabulator JS with cache-busting query -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/5.1.0/js/tabulator.min.js?ts=1728051270"></script>
+  <!-- Include Moment.js with cache-busting query -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js?ts=1728051270"></script>
+  <!-- Include Axios with cache-busting query -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js?ts=1728051270"></script>
+  <!-- Include app.js with cache-busting query -->
+  <script src="app.js?ts=1728051270"></script>
+</body>
+</html>
