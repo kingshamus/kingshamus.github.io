@@ -43,14 +43,14 @@
 
     #tableContainer {
       position: absolute;
-      top: calc(10% + 20px); /* Adjust this value as needed */
+      top: calc(10% + 20px);
       left: 50%;
       transform: translateX(-50%);
       width: 100%;
     }
 
     #tableElement {
-      max-width: 100%; /* Set max-width to 100% */
+      max-width: 100%;
     }
 
     .spinner {
@@ -60,66 +60,51 @@
       width: 50px;
       height: 50px;
       animation: spin 1s linear infinite;
-      position: fixed; /* Change to fixed positioning */
-      top: 50%; /* Position at 50% from the top */
-      left: 50%; /* Position at 50% from the left */
-      transform: translate(-50%, -50%); /* Center the spinner */
-      z-index: 9999; /* Ensure spinner appears on top of other elements */
-      display: none; /* Hide spinner by default */
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      display: none;
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
   </style>
 
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9289428933728345"
-        crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9289428933728345"
+    crossorigin="anonymous"></script>
+  <meta name="google-adsense-account" content="ca-pub-9289428933728345">
 
-<meta name="google-adsense-account" content="ca-pub-9289428933728345">
-  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-R3HQPCLHFH"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-R3HQPCLHFH');
+  </script>
 </head>
-  
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-R3HQPCLHFH"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-R3HQPCLHFH');
-</script>
-  
 <body>
   <div id="search-container">
     <div id="search-bar">
       <!-- Search Input with Autocomplete -->
-      <input type="text" id="gameName" class="search-input" placeholder="Search for a game..." list="gameList">
+      <input type="text" id="gameName" class class="search-input" placeholder="Search for a game..." list="gameList">
       <datalist id="gameList"></datalist>
       <!-- Search Button with Magnifying Glass Icon -->
       <button id="search-button" class="search-button" onclick="generateSpreadsheet()"><i class="fas fa-search"></i></button>
     </div>
   </div>
-  
+
   <!-- Loading Spinner for Table -->
   <div id="loadingSpinner" class="spinner"></div>
-  
-<!-- Table Container -->
-<div id="tableContainer" style="display: none;">
-  <!-- Set data-layout to "fitDataFill" for responsive layout -->
-  <div id="tableElement" data-layout="fitDataFill">
-    <!-- Define table columns with data-min-width attribute -->
-    <div data-field="Name" data-min-width="200" data-max-width="200">Name</div>
-    <div data-field="Start_Time_UTC" data-min-width="150" data-max-width="150">Start Time (UTC)</div>
-    <div data-field="Country_Code" data-min-width="100" data-max-width="100">Country Code</div>
-    <div data-field="State" data-min-width="100" data-max-width="100">State</div>
-    <div data-field="City" data-min-width="100" data-max-width="100">City</div>
-    <div data-field="Attendees" data-min-width="100" data-max-width="100">Attendees</div>
-    <div data-field="Is_Online" data-min-width="100" data-max-width="100">Is Online?</div>
-    <div data-field="Link" data-formatter="link" data-formatter-params='{"label": "Visit", "target": "_blank"}' data-min-width="100" data-max-width="100">Link</div>
+
+  <!-- Table Container -->
+  <div id="tableContainer" style="display: none;">
+    <div id="tableElement" data-layout="fitDataFill"></div>
   </div>
-</div>
 
   <!-- Include Tabulator JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/5.1.0/js/tabulator.min.js"></script>
@@ -165,115 +150,114 @@
     }
 
     function fetchTournaments(gameId) {
-        const token = "8c3d6ebd26053b772c8fdbd2bd73d78e";
-        const headers = { "Authorization": "Bearer " + token };
-        const totalPages = 10; // Number of pages to fetch
-    
-        // Show loading spinner
-        document.getElementById('loadingSpinner').style.display = 'block';
-    
-        // Function to fetch tournaments for a given page number
-        function fetchPage(page) {
-            const query = `query TournamentsByVideogame($perPage: Int!, $page: Int!, $videogameId: ID!) {
-                tournaments(query: {
-                    perPage: $perPage
-                    page: $page
-                    sortBy: "startAt asc"
-                    filter: {
-                        upcoming: true
-                        videogameIds: [
-                            $videogameId
-                        ]
-                    }
-                }) {
-                    nodes {
-                        name
-                        url
-                        numAttendees
-                        isRegistrationOpen
-                        startAt
-                        countryCode
-                        addrState
-                        city
-                        isOnline
-                    }
-                }
-            }`;
-    
-            const variables = {
-                perPage: 250,
-                page: page,
-                videogameId: parseInt(gameId)
-            };
-    
-            const url = 'https://api.start.gg/gql/alpha';
-    
-            return axios.post(url, { query, variables }, { headers })
-                .then(response => response.data.data.tournaments.nodes)
-                .catch(error => {
-                    console.error('Error fetching tournaments for page ' + page + ':', error);
-                    return []; // Return empty array in case of error
-                });
-        }
-    
-        // Array to store all promises for fetching pages
-        let pagePromises = [];
-    
-        // Generate promises for fetching each page
-        for (let page = 1; page <= totalPages; page++) {
-            pagePromises.push(fetchPage(page));
-        }
-    
-        // Execute promises in parallel
-        Promise.all(pagePromises)
-            .then(results => {
-                // Flatten the array of arrays into a single array of tournaments
-                const allTournaments = results.flat();
-    
-                const formattedTournaments = allTournaments.map(tournament => ({
-                    Name: tournament.name,
-                    Start_Time_UTC: moment.unix(tournament.startAt).utc().format('YYYY-MM-DD HH:mm:ss'),
-                    Country_Code: tournament.countryCode,
-                    State: tournament.addrState,
-                    City: tournament.city,
-                    Attendees: tournament.numAttendees,
-                    Is_Online: tournament.isOnline ? "Yes" : "No",
-                    Link: `https://start.gg${tournament.url}`
-                }));
-    
-                const tableData = {
-                    data: formattedTournaments
-                };
-    
-                // Initialize Tabulator with responsive layout and minimum column widths
-                const table = new Tabulator("#tableElement", {
-                    layout: "fitDataFill",
-                    columns: [
-                        { title: 'Name', field: 'Name', minWidth: 200, maxWidth: 200, headerFilter: false },
-                        { title: 'Start Time (UTC)', field: 'Start_Time_UTC', minWidth: 150, maxWidth: 150, headerFilter: false },
-                        { title: 'Country Code', field: 'Country_Code', minWidth: 100, maxWidth: 100, headerFilter: "select", headerFilterParams: { values: true } },
-                        { title: 'State', field: 'State', minWidth: 100, maxWidth: 100, headerFilter: "select", headerFilterParams: { values: true } },
-                        { title: 'City', field: 'City', minWidth: 100, maxWidth: 100, headerFilter: "select", headerFilterParams: { values: true } },
-                        { title: 'Attendees', field: 'Attendees', minWidth: 100, maxWidth: 100, headerFilter: false },
-                        { title: 'Is Online?', field: 'Is_Online', minWidth: 100, maxWidth: 100, headerFilter: "select", headerFilterParams: { values: true } },
-                        { title: 'Link', field: 'Link', formatter: 'link', formatterParams: { label: 'Visit', target: '_blank' }, minWidth: 100, maxWidth: 100 }
-                    ],
-                    data: formattedTournaments
-                });
-    
-                // Hide loading spinner
-                document.getElementById('loadingSpinner').style.display = 'none';
-    
-                // Show table container
-                document.getElementById('tableContainer').style.display = 'block';
-            })
-            .catch(error => {
-                console.error('Error fetching tournaments:', error);
-                // Hide loading spinner in case of error
-                document.getElementById('loadingSpinner').style.display = 'none';
-            });
+      const token = "8c3d6ebd26053b772c8fdbd2bd73d78e";
+      const headers = { "Authorization": "Bearer " + token };
+      const totalPages = 10; // Number of pages to fetch
+
+      // Show loading spinner
+      document.getElementById('loadingSpinner').style.display = 'block';
+
+      // Function to fetch tournaments for a given page number
+      function fetchPage(page) {
+        const query = `query TournamentsByVideogame($perPage: Int!, $page: Int!, $videogameId: ID!) {
+          tournaments(query: {
+            perPage: $perPage
+            page: $page
+            sortBy: "startAt asc"
+            filter: {
+              upcoming: true
+              videogameIds: [
+                $videogameId
+              ]
+            }
+          }) {
+            nodes {
+              name
+              url
+              numAttendees
+              isRegistrationOpen
+              startAt
+              countryCode
+              addrState
+              city
+              isOnline
+            }
+          }
+        }`;
+
+        const variables = {
+          perPage: 250,
+          page: page,
+          videogameId: parseInt(gameId)
+        };
+
+        const url = 'https://api.start.gg/gql/alpha';
+
+        return axios.post(url, { query, variables }, { headers })
+          .then(response => response.data.data.tournaments.nodes)
+          .catch(error => {
+            console.error('Error fetching tournaments for page ' + page + ':', error);
+            return []; // Return empty array in case of error
+          });
+      }
+
+      // Array to store all promises for fetching pages
+      let pagePromises = [];
+
+      // Generate promises for fetching each page
+      for (let page = 1; page <= totalPages; page++) {
+        pagePromises.push(fetchPage(page));
+      }
+
+      // Execute promises in parallel
+      Promise.all(pagePromises)
+        .then(results => {
+          // Flatten the array of arrays into a single array of tournaments
+          const allTournaments = results.flat();
+
+          const formattedTournaments = allTournaments.map(tournament => ({
+            Name: tournament.name,
+            Start_Time_UTC: moment.unix(tournament.startAt).utc().format('YYYY-MM-DD HH:mm:ss'),
+            Country_Code: tournament.countryCode,
+            State: tournament.addrState,
+            City: tournament.city,
+            Attendees: tournament.numAttendees,
+            Is_Online: tournament.isOnline ? "Yes" : "No",
+            Link: `https://start.gg${tournament.url}`
+          }));
+
+          const tableData = {
+            data: formattedTournaments
+          };
+
+          // Initialize Tabulator with responsive layout and minimum column widths
+          const table = new Tabulator("#tableElement", {
+            layout: "fitDataFill",
+            columns: [
+              { title: 'Name', field: 'Name', minWidth: 200, maxWidth: 200, headerFilter: false },
+              { title: 'Start Time (UTC)', field: 'Start_Time_UTC', minWidth: 150, maxWidth: 150, headerFilter: false },
+              { title: 'Country Code', field: 'Country_Code', minWidth: 100, maxWidth: 100, headerFilter: "select", headerFilterParams: { values: true } },
+              { title: 'State', field: 'State', minWidth: 100, maxWidth: 100, headerFilter: "select", headerFilterParams: { values: true } },
+              { title: 'City', field: 'City', minWidth: 100, maxWidth: 100, headerFilter: "select", headerFilterParams: { values: true } },
+              { title: 'Attendees', field: 'Attendees', minWidth: 100, maxWidth: 100, headerFilter: false },
+              { title: 'Is Online?', field: 'Is_Online', minWidth: 100, maxWidth: 100, headerFilter: "select", headerFilterParams: { values: true } },
+              { title: 'Link', field: 'Link', formatter: 'link', formatterParams: { label: 'Visit', target: '_blank' }, minWidth: 100, maxWidth: 100 }
+            ],
+            data: formattedTournaments
+          });
+
+          // Hide loading spinner
+          document.getElementById('loadingSpinner').style.display = 'none';
+
+          // Show table container
+          document.getElementById('tableContainer').style.display = 'block';
+        })
+        .catch(error => {
+          console.error('Error fetching tournaments:', error);
+          // Hide loading spinner in case of error
+          document.getElementById('loadingSpinner').style.display = 'none';
+        });
     }
   </script>
-  
 </body>
 </html>
