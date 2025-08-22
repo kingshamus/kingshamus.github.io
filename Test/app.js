@@ -540,7 +540,7 @@ async function displayFeaturedTournaments() {
 
             const marker = L.marker([lat, lng], {
                 icon: L.icon({
-                    iconUrl: 'custom pin/marker-icon-star.png',
+                    iconUrl: 'featuredlogo.png',
                     iconSize: [25, 41],
                     iconAnchor: [12, 41],
                     popupAnchor: [1, -34],
@@ -572,4 +572,5 @@ async function displayFeaturedTournaments() {
     } catch (error) {
         console.error('Error displaying featured tournaments:', error);
     }
+
 }
