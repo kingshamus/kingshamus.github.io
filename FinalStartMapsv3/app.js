@@ -86,7 +86,7 @@ const allMarkers = [];
 // Function to fetch and parse the CSV file for featured tournaments
 async function loadFeaturedTournaments() {
     try {
-        const response = await fetch('FeaturedEvents.csv'); // Replace with your CSV file path
+        const response = await fetch('path/to/featured_tournaments.csv'); // Replace with your CSV file path
         if (!response.ok) {
             throw new Error(`Failed to fetch CSV: ${response.status}`);
         }
@@ -101,6 +101,12 @@ async function loadFeaturedTournaments() {
         const featuredTournaments = parsedData.data;
         const geocodedTournaments = [];
 
+        // Function to convert DD/MM/YYYY to ISO 8601 format
+        function convertToISODate(ddmmyyyy) {
+            const [day, month, year] = ddmmyyyy.split('/');
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T00:00:00Z`;
+        }
+
         // Geocode each tournament's location
         for (const tournament of featuredTournaments) {
             const { 'Tournament name': name, 'Start Date/Time': startAt, Location: location, 'Sign up link': url, Games: games } = tournament;
@@ -111,18 +117,38 @@ async function loadFeaturedTournaments() {
                 continue;
             }
 
-            // Geocode the location using Nominatim
-            const coords = await geocodeLocation(location);
-            if (coords) {
-                geocodedTournaments.push({
-                    name,
-                    startAt: new Date(startAt).getTime() / 1000, // Convert to Unix timestamp (seconds)
-                    lat: coords.lat,
-                    lng: coords.lng,
-                    url,
-                    games: games || 'Not specified',
-                    numAttendees: null // No attendee data in CSV
-                });
+            try {
+                // Convert the date format if necessary
+                let isoDate;
+                if (startAt.includes('/')) {
+                    isoDate = convertToISODate(startAt);
+                } else {
+                    isoDate = startAt; // Assume it's already in ISO format
+                }
+
+                const startAtTimestamp = new Date(isoDate).getTime() / 1000;
+                if (isNaN(startAtTimestamp)) {
+                    console.warn(`Invalid date format for tournament "${name}": ${startAt}`);
+                    continue;
+                }
+
+                // Geocode the location using Nominatim
+                const coords = await geocodeLocation(location);
+                if (coords) {
+                    geocodedTournaments.push({
+                        name,
+                        startAt: startAtTimestamp,
+                        lat: coords.lat,
+                        lng: coords.lng,
+                        url,
+                        games: games || 'Not specified',
+                        numAttendees: null, // No attendee data in CSV
+                        images: [{ type: 'profile', url: 'path/to/default-image.jpg' }] // Default image or fetch dynamically if needed
+                    });
+                }
+            } catch (error) {
+                console.error(`Error processing tournament "${name}":`, error);
+                continue;
             }
         }
 
@@ -750,5 +776,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.appendChild(filterOptionsContainer);
     }
 });
+
 
 
