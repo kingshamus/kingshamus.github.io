@@ -86,7 +86,7 @@ const allMarkers = [];
 // Function to fetch and parse the CSV file for featured tournaments
 async function loadFeaturedTournaments() {
     try {
-        const response = await fetch('path/to/featured_tournaments.csv'); // Replace with your CSV file path
+        const response = await fetch('FeaturedEvents.csv'); // Replace with your CSV file path
         if (!response.ok) {
             throw new Error(`Failed to fetch CSV: ${response.status}`);
         }
@@ -776,6 +776,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.appendChild(filterOptionsContainer);
     }
 });
+
 
 
 
