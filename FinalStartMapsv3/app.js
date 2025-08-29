@@ -551,28 +551,29 @@ async function displayFeaturedTournaments() {
 
       featuredMarkers.push(marker);
 
-const cleanedGames = games ? games.trim().replace(/,\s*$/, '') : 'Not specified';
-const registerLink = url ? `<br><a href="${url}" target="_blank">Register</a>` : '';
-const tweetLink = url ? `<br><a href="https://twitter.com/intent/tweet?text=I'm signing up for ${encodeURIComponent(name)} via startmaps.xyz&url=${encodeURIComponent(url)}" target="_blank">Tweet</a>` : '';
+      const cleanedGames = games ? games.trim().replace(/,\s*$/, '') : 'Not specified';
+      const regLink      = url ? `<br><a href="${url}" target="_blank" rel="noopener">Register</a>` : '';
+      const tweetUrl     = url ? `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        `I'm signing up for ${name} via startmaps.xyz`
+      )}&url=${encodeURIComponent(url)}` : '';
+      const tweetLink    = tweetUrl ? `<br><a href="${tweetUrl}" target="_blank" rel="noopener">Tweet</a>` : '';
 
-const popupContent = `
-    <div style="display: flex; align-items: center; pointer-events: auto;">
-        <img src="/path/to/default-image.jpg" 
-             alt="No Image Available" 
-             style="width: 100px; height: 100px; object-fit: cover; pointer-events: none;">
-        <div style="margin-left: 10px;">
+      // No known image in CSV → show a default placeholder, hide if it 404s
+      const popupContent = `
+        <div style="display:flex;align-items:center;gap:10px;">
+          <img src="/path/to/default-image.jpg" onerror="this.style.display='none'"
+               style="width:100px;height:100px;object-fit:cover;border-radius:8px;">
+          <div style="line-height:1.2;">
             <b>${name}</b>
-            <br>Starts at: ${new Date(formattedStartTime).toLocaleString()} UTC
+            <br>Starts at: ${startDate.toLocaleString()} UTC
             <br>Location: ${location}
             <br>Games: ${cleanedGames}
-            ${registerLink}
+            ${regLink}
             ${tweetLink}
+          </div>
         </div>
-    </div>
-`;
-marker.bindPopup(popupContent, { closeButton: true });
-
-      
+      `;
+      marker.bindPopup(popupContent);
     }
   } catch (error) {
     console.error('Error displaying featured tournaments:', error);
@@ -592,5 +593,3 @@ document.addEventListener("DOMContentLoaded", function () {
   // Always-visible Featured Tournaments
   displayFeaturedTournaments();
 });
-
-
