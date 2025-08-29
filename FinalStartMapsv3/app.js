@@ -86,7 +86,7 @@ const allMarkers = [];
 // Function to fetch and parse the CSV file for featured tournaments
 async function loadFeaturedTournaments() {
     try {
-        const response = await fetch('FeaturedEvents.csv'); // Replace with your CSV file path
+        const response = await fetch('path/to/featured_tournaments.csv'); // Replace with your CSV file path
         if (!response.ok) {
             throw new Error(`Failed to fetch CSV: ${response.status}`);
         }
@@ -595,13 +595,37 @@ function showLegend() {
     }
 }
 
+// Function to toggle filter options visibility
+function toggleFilterOptions() {
+    const filterOptions = document.getElementById('filter-options');
+    filterOptions.style.display = (filterOptions.style.display === 'none' || filterOptions.style.display === '') ? 'block' : 'none';
+}
+
+// Function to select all filters
+function selectAllFilters() {
+    const checkboxes = document.querySelectorAll('#filter-options .filter-option input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = true;
+    });
+    updateFilters();
+}
+
+// Function to deselect all filters
+function deselectAllFilters() {
+    const checkboxes = document.querySelectorAll('#filter-options .filter-option input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    updateFilters();
+}
+
 // Function to select or deselect all checkboxes
 function toggleAllCheckboxes(checked) {
     const checkboxes = document.querySelectorAll('.pin-checkbox');
     checkboxes.forEach(checkbox => {
         checkbox.checked = checked;
         const iconColor = checkbox.id.replace('checkbox-', '');
-        filterMarkers(iconColor, checked);
+        filterByIcon(iconColor, checked);
     });
 }
 
@@ -622,21 +646,23 @@ function filterByIcon(iconFile, show) {
 // Function to update filters based on checkbox states
 function updateFilters() {
     const filterStates = {
-        'marker-icon-gold.png': document.getElementById('filter-gold').checked,
-        'marker-icon-grey.png': document.getElementById('filter-grey').checked,
-        'marker-icon-black.png': document.getElementById('filter-black').checked,
-        'marker-icon-violet.png': document.getElementById('filter-violet').checked,
-        'marker-icon-red.png': document.getElementById('filter-red').checked,
-        'marker-icon-orange.png': document.getElementById('filter-orange').checked,
-        'marker-icon-yellow.png': document.getElementById('filter-yellow').checked,
-        'marker-icon-green.png': document.getElementById('filter-green').checked,
-        'marker-icon-white.png': document.getElementById('filter-white').checked,
-        'marker-icon-blue.png': document.getElementById('filter-blue').checked,
+        'marker-icon-gold.png': document.getElementById('filter-gold')?.checked,
+        'marker-icon-grey.png': document.getElementById('filter-grey')?.checked,
+        'marker-icon-black.png': document.getElementById('filter-black')?.checked,
+        'marker-icon-violet.png': document.getElementById('filter-violet')?.checked,
+        'marker-icon-red.png': document.getElementById('filter-red')?.checked,
+        'marker-icon-orange.png': document.getElementById('filter-orange')?.checked,
+        'marker-icon-yellow.png': document.getElementById('filter-yellow')?.checked,
+        'marker-icon-green.png': document.getElementById('filter-green')?.checked,
+        'marker-icon-white.png': document.getElementById('filter-white')?.checked,
+        'marker-icon-blue.png': document.getElementById('filter-blue')?.checked,
         'marker-icon-star.png': document.getElementById('filter-star')?.checked // Add star filter
     };
 
     for (const [iconFile, show] of Object.entries(filterStates)) {
-        filterByIcon(iconFile, show);
+        if (show !== undefined) {
+            filterByIcon(iconFile, show);
+        }
     }
 }
 
@@ -650,7 +676,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add legend for existing icons and featured tournaments
     const legendContainer = document.querySelector('.legend-container');
     if (legendContainer) {
-        // Add existing legend items (ensure these exist in your HTML or create dynamically)
+        // Clear existing legend content to avoid duplication
+        legendContainer.innerHTML = '';
+
+        // Add legend items
         const colors = ['gold', 'grey', 'black', 'violet', 'red', 'orange', 'yellow', 'green', 'white', 'blue', 'star'];
         colors.forEach(color => {
             const legendItem = document.createElement('div');
@@ -686,5 +715,33 @@ document.addEventListener("DOMContentLoaded", function () {
         checkboxes.forEach(checkbox => {
             checkbox.addEventListener('change', updateFilters);
         });
+
+        // Add buttons for filter options (if needed in legend)
+        const filterOptionsContainer = document.createElement('div');
+        filterOptionsContainer.id = 'filter-options';
+        filterOptionsContainer.style.display = 'none'; // Initially hidden
+        colors.forEach(color => {
+            const filterOption = document.createElement('div');
+            filterOption.className = 'filter-option';
+            filterOption.innerHTML = `
+                <input type="checkbox" id="filter-${color}" class="pin-checkbox" checked>
+                <label for="filter-${color}">${color === 'star' ? 'Featured Tournaments' : color.charAt(0).toUpperCase() + color.slice(1)}</label>
+            `;
+            filterOptionsContainer.appendChild(filterOption);
+        });
+
+        // Add Select All and Deselect All for filter options
+        const selectAllFiltersButton = document.createElement('button');
+        selectAllFiltersButton.textContent = 'Select All Filters';
+        selectAllFiltersButton.addEventListener('click', selectAllFilters);
+
+        const deselectAllFiltersButton = document.createElement('button');
+        deselectAllFiltersButton.textContent = 'Deselect All Filters';
+        deselectAllFiltersButton.addEventListener('click', deselectAllFilters);
+
+        filterOptionsContainer.appendChild(selectAllFiltersButton);
+        filterOptionsContainer.appendChild(deselectAllFiltersButton);
+
+        document.body.appendChild(filterOptionsContainer);
     }
 });
