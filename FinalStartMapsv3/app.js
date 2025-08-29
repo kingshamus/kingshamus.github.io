@@ -556,8 +556,10 @@ const registerLink = url ? `<br><a href="${url}" target="_blank">Register</a>` :
 const tweetLink = url ? `<br><a href="https://twitter.com/intent/tweet?text=I'm signing up for ${encodeURIComponent(name)} via startmaps.xyz&url=${encodeURIComponent(url)}" target="_blank">Tweet</a>` : '';
 
 const popupContent = `
-    <div style="display: flex; align-items: center;">
-        <img src="/path/to/default-image.jpg" alt="No Image Available" style="width: 100px; height: 100px; object-fit: cover;">
+    <div style="display: flex; align-items: center; pointer-events: auto;">
+        <img src="/path/to/default-image.jpg" 
+             alt="No Image Available" 
+             style="width: 100px; height: 100px; object-fit: cover; pointer-events: none;">
         <div style="margin-left: 10px;">
             <b>${name}</b>
             <br>Starts at: ${new Date(formattedStartTime).toLocaleString()} UTC
@@ -568,7 +570,8 @@ const popupContent = `
         </div>
     </div>
 `;
-marker.bindPopup(popupContent);
+marker.bindPopup(popupContent, { closeButton: true });
+
       
     }
   } catch (error) {
@@ -589,4 +592,5 @@ document.addEventListener("DOMContentLoaded", function () {
   // Always-visible Featured Tournaments
   displayFeaturedTournaments();
 });
+
 
