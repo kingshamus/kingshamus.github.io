@@ -194,19 +194,18 @@ function displayFeaturedTournaments(tournaments) {
             imageUrl = 'https://pbs.twimg.com/media/GZ27r6FXEAAi6e7?format=jpg&name=large'; // Replace with actual image URL
         }
 
-            const popupContent = `
-                <div style="display: flex; align-items: center;">
-                    <img src="/path/to/default-image.jpg" alt="No Image Available" style="width: 100px; height: 100px; object-fit: cover;">
-                    <div style="margin-left: 10px;">
-                        <b>${name}</b>
-                        <br>Starts at: ${new Date(formattedStartTime).toLocaleString()}UTC
-                        <br>Location: ${location}
-                        <br>Games: ${cleanedGames}
-                        ${registerLink}
-                        ${tweetLink}
-                    </div>
+        const popupContent = `
+            <div style="display: flex; align-items: center;">
+                <img src="${imageUrl}" onerror="this.src='path/to/default-image.jpg'; this.onerror=null;" style="width: 100px; height: 100px; object-fit: cover;">
+                <div style="margin-left: 10px;">
+                    <b>${name} (Featured)</b>
+                    <br>Games: ${games}
+                    <br>Starts at: ${new Date(startAt * 1000).toLocaleString()} UTC
+                    <br>Attendees: ${numAttendees || 'Not specified'}
+                    <br><a href="${url}" target="_blank">Register</a>
+                    <br><a href="https://twitter.com/intent/tweet?text=I'm signing up for ${encodeURIComponent(name)} via startmaps.xyz&url=${encodeURIComponent(url)}" target="_blank">Tweet</a>
                 </div>
-            `;</div>
+            </div>
         `;
 
         marker.bindPopup(popupContent);
@@ -771,7 +770,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.appendChild(filterOptionsContainer);
     }
 });
-
 
 
 
