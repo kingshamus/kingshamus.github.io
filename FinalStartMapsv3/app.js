@@ -180,22 +180,23 @@ async function geocodeLocation(location) {
 }
 
 // Function to display featured tournaments on the map
+// Function to display featured tournaments on the map
 function displayFeaturedTournaments(tournaments) {
     tournaments.forEach(tournament => {
-        const { name, lat, lng, startAt, url, games, images } = tournament;
+        const { name, startAt, location, games, url, images } = tournament;
 
         // Create a marker for the tournament
-        const marker = L.marker([lat, lng]).addTo(map);
+        const marker = L.marker([tournament.lat, tournament.lng]).addTo(map);
         allMarkers.push(marker); // Add to global markers array for filtering
 
-        // Create popup content with only the specified fields
+        // Create popup content with only the specified fields from CSV
         const popupContent = `
             <div style="display: flex; align-items: center;">
                 <img src="${images[0].url}" onerror="this.src='path/to/default-image.jpg'; this.onerror=null;" style="width: 100px; height: 100px; object-fit: cover;">
                 <div style="margin-left: 10px;">
                     <b>${name}</b>
-                    <br>Start Date: ${new Date(startAt * 1000).toLocaleDateString()}
-                    <br>Location: ${location || 'Not specified'}
+                    <br>Date: ${new Date(startAt * 1000).toLocaleDateString()}
+                    <br>Location: ${location}
                     <br>Games: ${games}
                     <br><a href="${url}" target="_blank">Register</a>
                     <br><a href="https://twitter.com/intent/tweet?text=I'm signing up for ${encodeURIComponent(name)} via startmaps.xyz&url=${encodeURIComponent(url)}" target="_blank">Tweet</a>
@@ -765,6 +766,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.appendChild(filterOptionsContainer);
     }
 });
+
 
 
 
