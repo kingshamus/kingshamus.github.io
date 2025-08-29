@@ -111,12 +111,6 @@ async function loadFeaturedTournaments() {
         for (const tournament of featuredTournaments) {
             const { 'Tournament name': name, 'Start Date/Time': startAt, Location: location, 'Sign up link': url, Games: games } = tournament;
 
-            // Validate required fields
-            if (!name || !startAt || !location || !url) {
-                console.warn(`Skipping tournament due to missing fields: ${JSON.stringify(tournament)}`);
-                continue;
-            }
-
             try {
                 // Convert the date format if necessary
                 let isoDate;
@@ -776,6 +770,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.appendChild(filterOptionsContainer);
     }
 });
+
 
 
 
