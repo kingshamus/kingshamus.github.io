@@ -12,7 +12,7 @@ function requestLocationAndZoom() {
             var longitude = position.coords.longitude;
 
             // Initialize the map with the user's location
-            map.setView([latitude, longitude], 3); // Set initial zoom level to 10
+            map.setView([latitude, longitude], 3); // Set initial zoom level to 3
 
             // Get the current zoom level
             var currentZoom = map.getZoom();
@@ -68,11 +68,6 @@ function requestLocationAndZoom() {
     }
 }
 
-// Call requestLocationAndZoom when the page is loaded
-document.addEventListener("DOMContentLoaded", function () {
-    requestLocationAndZoom();
-});
-
 // Initialize the map
 var map = L.map('map').setView([0, 0], 2);
 
@@ -84,6 +79,122 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // Define headers and query for fetching data
 var token = "8c3d6ebd26053b772c8fdbd2bd73d78e";
 var headers = { "Authorization": "Bearer " + token };
+
+// Global variable to store all markers
+const allMarkers = [];
+
+// Function to fetch and parse the CSV file for featured tournaments
+async function loadFeaturedTournaments() {
+    try {
+        const response = await fetch('FeaturedEvents.csv'); // Replace with your CSV file path
+        if (!response.ok) {
+            throw new Error(`Failed to fetch CSV: ${response.status}`);
+        }
+        const csvText = await response.text();
+
+        // Parse CSV using Papa Parse
+        const parsedData = Papa.parse(csvText, {
+            header: true,
+            skipEmptyLines: true
+        });
+
+        const featuredTournaments = parsedData.data;
+        const geocodedTournaments = [];
+
+        // Geocode each tournament's location
+        for (const tournament of featuredTournaments) {
+            const { 'Tournament name': name, 'Start Date/Time': startAt, Location: location, 'Sign up link': url, Games: games } = tournament;
+
+            // Validate required fields
+            if (!name || !startAt || !location || !url) {
+                console.warn(`Skipping tournament due to missing fields: ${JSON.stringify(tournament)}`);
+                continue;
+            }
+
+            // Geocode the location using Nominatim
+            const coords = await geocodeLocation(location);
+            if (coords) {
+                geocodedTournaments.push({
+                    name,
+                    startAt: new Date(startAt).getTime() / 1000, // Convert to Unix timestamp (seconds)
+                    lat: coords.lat,
+                    lng: coords.lng,
+                    url,
+                    games: games || 'Not specified',
+                    numAttendees: null // No attendee data in CSV
+                });
+            }
+        }
+
+        // Display the featured tournaments on the map
+        displayFeaturedTournaments(geocodedTournaments);
+    } catch (error) {
+        console.error('Error loading featured tournaments:', error);
+    }
+}
+
+// Function to geocode a location using Nominatim
+async function geocodeLocation(location) {
+    try {
+        const response = await fetch(`${nominatimEndpoint}?q=${encodeURIComponent(location)}&format=json&limit=1`, {
+            headers: {
+                'User-Agent': 'Startmaps/1.0 (your-email@example.com)' // Replace with your contact email
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`Nominatim API error: ${response.status}`);
+        }
+        const data = await response.json();
+        if (data.length > 0) {
+            return {
+                lat: parseFloat(data[0].lat),
+                lng: parseFloat(data[0].lon)
+            };
+        }
+        console.warn(`No coordinates found for location: ${location}`);
+        return null;
+    } catch (error) {
+        console.error(`Error geocoding location "${location}":`, error);
+        return null;
+    }
+}
+
+// Function to display featured tournaments on the map
+function displayFeaturedTournaments(tournaments) {
+    tournaments.forEach(tournament => {
+        const { name, lat, lng, startAt, url, games, numAttendees } = tournament;
+
+        // Create a marker for the tournament
+        const marker = L.marker([lat, lng]).addTo(map);
+        allMarkers.push(marker); // Add to global markers array for filtering
+
+        // Create popup content
+        const popupContent = `
+            <div style="display: flex; align-items: center;">
+                <img src="/path/to/default-image.jpg" alt="Featured Tournament" style="width: 100px; height: 100px; object-fit: cover;">
+                <div style="margin-left: 10px;">
+                    <b>${name} (Featured)</b>
+                    <br>Games: ${games}
+                    <br>Starts at: ${new Date(startAt * 1000).toLocaleString()} UTC
+                    <br>Attendees: ${numAttendees || 'Not specified'}
+                    <br><a href="${url}" target="_blank">Register</a>
+                    <br><a href="https://twitter.com/intent/tweet?text=I'm signing up for ${encodeURIComponent(name)} via startmaps.xyz&url=${encodeURIComponent(url)}" target="_blank">Tweet</a>
+                </div>
+            </div>
+        `;
+
+        marker.bindPopup(popupContent);
+
+        // Set a distinct star icon for featured tournaments
+        marker.setIcon(L.icon({
+            iconUrl: 'custom pin/marker-icon-star.png', // Replace with your star icon path
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        }));
+    });
+}
 
 async function fetchData(videogameId) {
     try {
@@ -308,7 +419,7 @@ async function displayData(gameId) {
                         ${imageElement}
                         <div style="margin-left: 10px;">
                             <b>${name}</b>
-                            <br>Starts at: ${new Date(startAt * 1000).toLocaleString()}UTC
+                            <br>Starts at: ${new Date(startAt * 1000).toLocaleString()} UTC
                             <br>Attendees: ${numAttendees}
                             <br><a href="https://start.gg${url}" target="_blank">Register</a>
                             <br><a href="https://twitter.com/intent/tweet?text=I'm signing up for ${encodeURIComponent(name)} via startmaps.xyz&url=${encodeURIComponent(`https://start.gg${url}`)}" target="_blank">Tweet</a>
@@ -326,8 +437,6 @@ async function displayData(gameId) {
                 shadowSize: [41, 41]
             }));
         });
-
-        // ... (legend control code remains unchanged, moved outside try-catch in your original)
 
     } catch (error) {
         console.error(`Error displaying data: ${error.message}`);
@@ -405,8 +514,8 @@ async function autocompleteSearch() {
     }
 }
 
-// Define selectedGames globally or within a module scope
-let selectedGames = new Set(); // or let selectedGames = []; if using an Array
+// Define selectedGames globally
+let selectedGames = new Set();
 
 // Function to clear selected games and refresh the page
 function clearSelectedGames() {
@@ -428,18 +537,6 @@ function updateSelectedGamesDisplay(videoGames, selectedGames) {
     document.getElementById('selected-games').value = Array.from(selectedGames).join(',');
 }
 
-// Example function for adding a game (for context)
-function addGame(gameID) {
-    if (selectedGames instanceof Set) {
-        selectedGames.add(gameID); // Add to the Set
-    } else {
-        console.error('selectedGames is not a Set');
-    }
-
-    // Update display after adding a game
-    updateSelectedGamesDisplay([], selectedGames);
-}
-
 // Function to clear all existing markers and filters from the map
 function clearExistingFiltersAndMarkers() {
     // Remove all markers from the map
@@ -448,6 +545,9 @@ function clearExistingFiltersAndMarkers() {
             map.removeLayer(layer);
         }
     });
+
+    // Clear the allMarkers array
+    allMarkers.length = 0;
 
     // Remove the legend container if it exists
     const legendContainer = document.querySelector('.legend-container');
@@ -463,7 +563,7 @@ async function search() {
     clearExistingFiltersAndMarkers();
     if (selectedGameIds.length > 0) {
         for (const gameId of selectedGameIds) {
-            await displayData(gameId); // Already updated above
+            await displayData(gameId);
         }
     } else {
         const popup = L.popup()
@@ -475,6 +575,8 @@ async function search() {
         showLegend();
     }
     document.getElementById('map-loading-spinner').style.display = 'none';
+    // Reload featured tournaments after search to ensure they reappear
+    await loadFeaturedTournaments();
 }
 
 // Function to hide the legend
@@ -503,71 +605,6 @@ function toggleAllCheckboxes(checked) {
     });
 }
 
-// Add "Select All" and "Deselect All" buttons to the legend
-const selectAllButton = document.createElement('button');
-selectAllButton.textContent = 'Select All';
-selectAllButton.classList.add('legend-button');
-selectAllButton.addEventListener('click', function() {
-    toggleAllCheckboxes(true);
-});
-
-const deselectAllButton = document.createElement('button');
-deselectAllButton.textContent = 'Deselect All';
-deselectAllButton.classList.add('legend-button');
-deselectAllButton.addEventListener('click', function() {
-    toggleAllCheckboxes(false);
-});
-
-// Add buttons to legend container
-const legendContainer = document.querySelector('.legend-container');
-if (legendContainer) {
-    legendContainer.appendChild(selectAllButton);
-    legendContainer.appendChild(deselectAllButton);
-}
-
-// Global variable to store all markers
-const allMarkers = [];
-
-// Function to toggle filter options visibility
-function toggleFilterOptions() {
-    const filterOptions = document.getElementById('filter-options');
-    filterOptions.style.display = (filterOptions.style.display === 'none' || filterOptions.style.display === '') ? 'block' : 'none';
-}
-
-// Function to select all filters
-function selectAllFilters() {
-    const checkboxes = document.querySelectorAll('#filter-options .filter-option input[type="checkbox"]');
-    checkboxes.forEach(checkbox => checkbox.checked = true);
-    updateFilters();
-}
-
-// Function to deselect all filters
-function deselectAllFilters() {
-    const checkboxes = document.querySelectorAll('#filter-options .filter-option input[type="checkbox"]');
-    checkboxes.forEach(checkbox => checkbox.checked = false);
-    updateFilters();
-}
-
-// Function to update filters based on checkbox states
-function updateFilters() {
-    const filterStates = {
-        'marker-icon-gold.png': document.getElementById('filter-gold').checked,
-        'marker-icon-grey.png': document.getElementById('filter-grey').checked,
-        'marker-icon-black.png': document.getElementById('filter-black').checked,
-        'marker-icon-violet.png': document.getElementById('filter-violet').checked,
-        'marker-icon-red.png': document.getElementById('filter-red').checked,
-        'marker-icon-orange.png': document.getElementById('filter-orange').checked,
-        'marker-icon-yellow.png': document.getElementById('filter-yellow').checked,
-        'marker-icon-green.png': document.getElementById('filter-green').checked,
-        'marker-icon-white.png': document.getElementById('filter-white').checked,
-        'marker-icon-blue.png': document.getElementById('filter-blue').checked
-    };
-
-    for (const [iconFile, show] of Object.entries(filterStates)) {
-        filterByIcon(iconFile, show);
-    }
-}
-
 // Function to filter markers by icon
 function filterByIcon(iconFile, show) {
     allMarkers.forEach(marker => {
@@ -582,17 +619,72 @@ function filterByIcon(iconFile, show) {
     });
 }
 
+// Function to update filters based on checkbox states
+function updateFilters() {
+    const filterStates = {
+        'marker-icon-gold.png': document.getElementById('filter-gold').checked,
+        'marker-icon-grey.png': document.getElementById('filter-grey').checked,
+        'marker-icon-black.png': document.getElementById('filter-black').checked,
+        'marker-icon-violet.png': document.getElementById('filter-violet').checked,
+        'marker-icon-red.png': document.getElementById('filter-red').checked,
+        'marker-icon-orange.png': document.getElementById('filter-orange').checked,
+        'marker-icon-yellow.png': document.getElementById('filter-yellow').checked,
+        'marker-icon-green.png': document.getElementById('filter-green').checked,
+        'marker-icon-white.png': document.getElementById('filter-white').checked,
+        'marker-icon-blue.png': document.getElementById('filter-blue').checked,
+        'marker-icon-star.png': document.getElementById('filter-star')?.checked // Add star filter
+    };
+
+    for (const [iconFile, show] of Object.entries(filterStates)) {
+        filterByIcon(iconFile, show);
+    }
+}
+
 // Event listener for when the DOM content is loaded
 document.addEventListener("DOMContentLoaded", function () {
-    // Add event listeners to checkboxes
-    const checkboxes = document.querySelectorAll('#filter-options .filter-option input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', updateFilters);
-    });
+    // Initialize map and other features
+    requestLocationAndZoom();
+    autocompleteSearch();
+    loadFeaturedTournaments(); // Load featured tournaments on page load
 
-    // Initialize the filters based on checkbox states
-    updateFilters();
+    // Add legend for existing icons and featured tournaments
+    const legendContainer = document.querySelector('.legend-container');
+    if (legendContainer) {
+        // Add existing legend items (ensure these exist in your HTML or create dynamically)
+        const colors = ['gold', 'grey', 'black', 'violet', 'red', 'orange', 'yellow', 'green', 'white', 'blue', 'star'];
+        colors.forEach(color => {
+            const legendItem = document.createElement('div');
+            legendItem.className = 'legend-item';
+            legendItem.innerHTML = `
+                <input type="checkbox" id="filter-${color}" class="pin-checkbox" checked>
+                <img src="custom pin/marker-icon-${color}.png" alt="${color}">
+                <label for="filter-${color}">${color === 'star' ? 'Featured Tournaments' : color.charAt(0).toUpperCase() + color.slice(1)}</label>
+            `;
+            legendContainer.appendChild(legendItem);
+        });
+
+        // Add Select All and Deselect All buttons
+        const selectAllButton = document.createElement('button');
+        selectAllButton.textContent = 'Select All';
+        selectAllButton.classList.add('legend-button');
+        selectAllButton.addEventListener('click', function() {
+            toggleAllCheckboxes(true);
+        });
+
+        const deselectAllButton = document.createElement('button');
+        deselectAllButton.textContent = 'Deselect All';
+        deselectAllButton.classList.add('legend-button');
+        deselectAllButton.addEventListener('click', function() {
+            toggleAllCheckboxes(false);
+        });
+
+        legendContainer.appendChild(selectAllButton);
+        legendContainer.appendChild(deselectAllButton);
+
+        // Add event listeners to checkboxes
+        const checkboxes = document.querySelectorAll('.pin-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateFilters);
+        });
+    }
 });
-
-// Call the function to set up autocomplete
-autocompleteSearch();
