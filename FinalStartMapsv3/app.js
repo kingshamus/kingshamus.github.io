@@ -199,19 +199,19 @@ function displayFeaturedTournaments(tournaments) {
             const tweetLink = url ? `<br><a href="https://twitter.com/intent/tweet?text=I'm signing up for ${encodeURIComponent(name)} via startmaps.xyz&url=${encodeURIComponent(url)}" target="_blank">Tweet</a>` : '';
 
             // Create popup content with the specified fields
-            const popupContent = `
-                <div style="display: flex; align-items: center;">
-                    <img src="/path/to/default-image.jpg" alt="No Image Available" style="width: 100px; height: 100px; object-fit: cover;">
-                    <div style="margin-left: 10px;">
-                        <b>${name}</b>
-                        <br>Starts at: ${new Date(formattedStartTime).toLocaleString()} UTC
-                        <br>Location: ${location}
-                        <br>Games: ${cleanedGames}
-                        ${registerLink}
-                        ${tweetLink}
-                    </div>
-                </div>
-            `;
+const popupContent = `
+    <div style="display: flex; align-items: center;">
+        <img src="/path/to/default-image.jpg" alt="No Image Available" style="width: 100px; height: 100px; object-fit: cover;">
+        <div style="margin-left: 10px;">
+            <b>${name}</b>
+            <br>Starts at: ${new Date(formattedStartTime).toLocaleString()} UTC
+            <br>Location: ${location}
+            <br>Games: ${cleanedGames}
+            ${registerLink}
+            ${tweetLink}
+        </div>
+    </div>
+`;
 
             marker.bindPopup(popupContent);
 
@@ -778,3 +778,4 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.appendChild(filterOptionsContainer);
     }
 });
+
