@@ -594,5 +594,132 @@ document.addEventListener("DOMContentLoaded", function () {
     updateFilters();
 });
 
+async function fetchFeaturedTournaments() {
+    try {
+        const response = await fetch('FeaturedEvents.csv');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const csvText = await response.text();
+        
+        return new Promise((resolve, reject) => {
+            Papa.parse(csvText, {
+                header: true,
+                skipEmptyLines: true,
+                complete: function (results) {
+                    resolve(results.data);
+                },
+                error: function (error) {
+                    reject(error);
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Error fetching featured tournaments:', error);
+        return [];
+    }
+}
+
+async function geocodeLocation(location) {
+    try {
+        const response = await fetch(`${nominatimEndpoint}?q=${encodeURIComponent(location)}&format=json&limit=1`, {
+            headers: { 'User-Agent': 'Startmaps/1.0 (your-email@example.com)' }
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (data.length > 0) {
+            return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+        } else {
+            console.error(`No geocoding results for location: ${location}`);
+            return null;
+        }
+    } catch (error) {
+        console.error(`Error geocoding location "${location}":`, error);
+        return null;
+    }
+}
+
+async function displayFeaturedTournaments() {
+    try {
+        const tournaments = await fetchFeaturedTournaments();
+        if (tournaments.length === 0) {
+            console.warn('No featured tournaments found in CSV.');
+            return;
+        }
+
+        // Current date and time (August 22, 2025, 11:54 AM UTC)
+        const currentTime = new Date("2025-08-22T11:54:00Z").getTime();
+
+        for (const tournament of tournaments) {
+            const { 'Tournament name': name, 'Start Date/Time': startTime, Location: location, 'Sign up link': url, Games: games } = tournament;
+
+            if (!name || !startTime || !location) {
+                console.error(`Invalid tournament data: ${JSON.stringify(tournament)}`);
+                continue;
+            }
+
+            // Convert start time to ISO format
+            let startDate = new Date(startTime);
+            if (isNaN(startDate.getTime())) {
+                const [day, month, year] = startTime.split('/').map(Number);
+                startDate = new Date(year, month - 1, day); // month is 0-indexed
+            }
+            const formattedStartTime = startDate.toISOString();
+            const tournamentTime = new Date(formattedStartTime).getTime();
+
+            // Skip if the tournament has already taken place
+            if (tournamentTime <= currentTime) {
+                console.log(`Skipping past tournament: ${name} (starts ${formattedStartTime})`);
+                continue;
+            }
+
+            const coords = await geocodeLocation(location);
+            if (!coords) {
+                console.error(`Skipping tournament "${name}" due to geocoding failure.`);
+                continue;
+            }
+
+            const { lat, lng } = coords;
+
+            const marker = L.marker([lat, lng], {
+                icon: L.icon({
+                    iconUrl: 'featuredlogo.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                })
+            }).addTo(map);
+
+            featuredMarkers.push(marker);
+
+            const cleanedGames = games ? games.trim().replace(/,\s*$/, '') : 'Not specified';
+            const registerLink = url ? `<br><a href="${url}" target="_blank">Register</a>` : '';
+            const tweetLink = url ? `<br><a href="https://twitter.com/intent/tweet?text=I'm signing up for ${encodeURIComponent(name)} via startmaps.xyz&url=${encodeURIComponent(url)}" target="_blank">Tweet</a>` : '';
+
+            const popupContent = `
+                <div style="display: flex; align-items: center;">
+                    <img src="/path/to/default-image.jpg" alt="No Image Available" style="width: 100px; height: 100px; object-fit: cover;">
+                    <div style="margin-left: 10px;">
+                        <b>${name}</b>
+                        <br>Starts at: ${new Date(formattedStartTime).toLocaleString()}UTC
+                        <br>Location: ${location}
+                        <br>Games: ${cleanedGames}
+                        ${registerLink}
+                        ${tweetLink}
+                    </div>
+                </div>
+            `;
+            marker.bindPopup(popupContent);
+        }
+    } catch (error) {
+        console.error('Error displaying featured tournaments:', error);
+    }
+
+}
+
 // Call the function to set up autocomplete
 autocompleteSearch();
+
