@@ -162,16 +162,21 @@ async function geocodeLocation(location) {
 // Function to display featured tournaments on the map
 function displayFeaturedTournaments(tournaments) {
     tournaments.forEach(tournament => {
-        const { name, lat, lng, startAt, url, games, numAttendees } = tournament;
+        const { name, lat, lng, startAt, url, games, numAttendees, images } = tournament;
 
         // Create a marker for the tournament
         const marker = L.marker([lat, lng]).addTo(map);
         allMarkers.push(marker); // Add to global markers array for filtering
 
-        // Create popup content
+        // Create popup content with the specific image for "Round 2! Casual Rounds"
+        let imageUrl = Array.isArray(images) && images.length > 0 ? images[0].url : 'path/to/default-image.jpg';
+        if (name === "Round 2! Casual Rounds") {
+            imageUrl = 'https://pbs.twimg.com/media/GZ27r6FXEAAi6e7?format=jpg&name=large'; // Replace with actual image URL
+        }
+
         const popupContent = `
             <div style="display: flex; align-items: center;">
-                <img src="/path/to/default-image.jpg" alt="Featured Tournament" style="width: 100px; height: 100px; object-fit: cover;">
+                <img src="${imageUrl}" onerror="this.src='path/to/default-image.jpg'; this.onerror=null;" style="width: 100px; height: 100px; object-fit: cover;">
                 <div style="margin-left: 10px;">
                     <b>${name} (Featured)</b>
                     <br>Games: ${games}
@@ -745,4 +750,5 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.appendChild(filterOptionsContainer);
     }
 });
+
 
