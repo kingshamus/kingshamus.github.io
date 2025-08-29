@@ -3,6 +3,10 @@ var nominatimEndpoint = 'https://nominatim.openstreetmap.org/search';
 // Replace `<YOUR_SMASHGG_API_ENDPOINT>` with the Smash.gg API endpoint
 var smashGGEndpoint = 'cache.json';
 
+// Global variables
+const allMarkers = [];
+const featuredMarkers = []; // Initialize featuredMarkers here
+
 // Function to request location permission and zoom if allowed
 function requestLocationAndZoom() {
     if (navigator.geolocation) {
@@ -79,9 +83,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // Define headers and query for fetching data
 var token = "8c3d6ebd26053b772c8fdbd2bd73d78e";
 var headers = { "Authorization": "Bearer " + token };
-
-// Global variable to store all markers
-const allMarkers = [];
 
 // Function to fetch and parse the CSV file for featured tournaments
 async function loadFeaturedTournaments() {
@@ -777,11 +778,3 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.appendChild(filterOptionsContainer);
     }
 });
-
-
-
-
-
-
-
-
